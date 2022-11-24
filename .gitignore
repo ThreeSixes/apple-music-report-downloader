@@ -1,0 +1,10 @@
+# Don't store configuration data or cryptographic material.
+*.json
+*.p8
+
+# Don't store downloaded reports.
+**/*.tsv
+
+
+# OS artifacts
+**/.DS_Store

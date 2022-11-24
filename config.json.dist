@@ -1,0 +1,5 @@
+{
+    "issuer_id": "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX",
+    "key_id": "YYYYYYYYYY",
+    "privkey_path": "AuthKey_YYYYYYYYYY.p8"
+}
