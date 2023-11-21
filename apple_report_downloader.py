@@ -238,8 +238,8 @@ class AppleAPI:
         return token
 
     
-    def request_in_review_report(self, rptg_day):
-        """Request in-review report.
+    def request_flagged_streams_report(self, rptg_day):
+        """Request flagged streams report.
 
         Args:
             rptg_day (str): Reporting day in YYYY-MM-DD format.
@@ -248,7 +248,7 @@ class AppleAPI:
             str: Tab-separated values.
         """
 
-        path_part = f"/reports/in-review/v1?rptg_date={rptg_day}"
+        path_part = f"/reports/flagged-streams/v2?rptg_date={rptg_day}"
 
         # Construct API URL and make the signed request.
         report_url = f"{self.__api_base_url}{path_part}"
@@ -274,15 +274,15 @@ class OuptutDataLayer:
             f.write(content)
 
 
-    def write_in_review_report(self, rprt_date, body):
-        """Write the in-review report to disk.
+    def write_flagged_streams_report(self, rprt_date, body):
+        """Write the flagged-streams report to disk.
 
         Args:
             rprt_date (str): String in YYYY-MM-DD format.
             body (str): Returned request body to be written.
         """
 
-        file_name = f"in-review-{rprt_date}.tsv"
+        file_name = f"flagged-streams-{rprt_date}.tsv"
         self.__write_file(file_name, body)
 
 
@@ -298,15 +298,15 @@ if __name__ == "__main__":
         help="Specify an alternate config file.")
     parser.add_argument('--out', type=str, default=None,
         help="Override default output file name.")
-    parser.add_argument('--get-in-review', type=str,
-        help="Get in-review report. Accepts a date in YYYY-MM-DD format.")
+    parser.add_argument('--get-flagged-streams', type=str,
+        help="Get flagged streams report. Accepts a date in YYYY-MM-DD format.")
     args = parser.parse_args()
 
     initial_args = {}
     operation_ct = 0
 
     # Increment operation count for each specified operation.
-    if args.get_in_review is not False:
+    if args.get_flagged_streams is not False:
         operation_ct += 1
 
     if operation_ct > 1 or operation_ct < 1:
@@ -319,13 +319,13 @@ if __name__ == "__main__":
     configurator = Configurator(config_file=args.config, args=initial_args)
     api = AppleAPI(**configurator.configuration)
 
-    # Get in-review report
-    if args.get_in_review is not False:
-        results = api.request_in_review_report(args.get_in_review)
+    # Get flagged streams report
+    if args.get_flagged_streams is not False:
+        results = api.request_flagged_streams_report(args.get_flagged_streams)
 
         # Success!
         if results[0] == 200:
-            output_data_layer.write_in_review_report(args.get_in_review, results[2])
+            output_data_layer.write_flagged_streams_report(args.get_flagged_streams, results[2])
 
         else:
             raise RuntimeError("API returned an HTTP %s." %results[0])
